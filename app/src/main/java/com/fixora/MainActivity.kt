@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
 }
 
 object FixoraRoutes {
+    const val SPLASH = "splash"
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val HOME = "home"
@@ -64,13 +65,24 @@ object FixoraRoutes {
 fun FixoraNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = FixoraRoutes.LOGIN
+    startDestination: String = FixoraRoutes.SPLASH
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
+        // Splash Screen
+        composable(FixoraRoutes.SPLASH) {
+            SplashScreen(
+                onSplashFinished = {
+                    navController.navigate(FixoraRoutes.LOGIN) {
+                        popUpTo(FixoraRoutes.SPLASH) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         // Login Screen
         composable(FixoraRoutes.LOGIN) {
             val viewModel: AuthViewModel = hiltViewModel()
