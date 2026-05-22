@@ -1,0 +1,26 @@
+# Project exclude paths
+/.gradle/
+/app/build/
+/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/build/
+/core/common/build/
+/core/data/build/
+/core/data/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/core/database/build/
+/core/database/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/core/designsystem/build/
+/core/domain/build/
+/core/domain/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/core/model/build/
+/core/network/build/
+/core/network/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/feature/auth/build/
+/feature/auth/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/feature/booking/build/
+/feature/booking/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/feature/home/build/
+/feature/home/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/feature/profile/build/
+/feature/profile/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/
+/feature/provider/build/
+/feature/provider/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/

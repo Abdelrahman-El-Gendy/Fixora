@@ -1,0 +1,39 @@
+package com.fixora.core.designsystem.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun GlassCard(
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.medium,
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        modifier = modifier
+            .shadow(
+                elevation = 8.dp,
+                shape = shape,
+                clip = false,
+                ambientColor = MaterialTheme.colorScheme.outline,
+                spotColor = MaterialTheme.colorScheme.outline
+            )
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                shape = shape
+            ),
+        content = content
+    )
+}
