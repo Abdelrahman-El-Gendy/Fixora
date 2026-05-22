@@ -29,3 +29,7 @@ val StatusSuccess = Color(0xFF10B981)
 val StatusWarning = Color(0xFFF59E0B)
 val StatusError = Color(0xFFEF4444)
 val StatusInfo = Color(0xFF3B82F6)
+
+// Splash Screen Colors
+val SplashBlueTop = Color(0xFF1E88E5)
+val SplashBlueBottom = Color(0xFF0D47A1)
