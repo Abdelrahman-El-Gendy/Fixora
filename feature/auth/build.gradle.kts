@@ -45,7 +45,7 @@ dependencies {
     // Lifecycle Compose (for collecting states safely)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
-    implementation(libs.androidx.hilt.lifecycle.viewModelCompose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Hilt
     implementation(libs.hilt.android)

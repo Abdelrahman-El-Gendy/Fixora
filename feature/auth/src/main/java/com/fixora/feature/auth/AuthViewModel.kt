@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fixora.core.domain.usecase.LoginUseCase
 import com.fixora.core.domain.usecase.RegisterUseCase
+import com.fixora.core.domain.usecase.SetOnboardingCompletedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +22,8 @@ sealed interface AuthUiState {
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    private val setOnboardingCompletedUseCase: SetOnboardingCompletedUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
@@ -36,6 +38,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = AuthUiState.Loading
             try {
                 val user = loginUseCase(email, password)
+                setOnboardingCompletedUseCase()
                 _uiState.value = AuthUiState.Success(user.name)
             } catch (e: Exception) {
                 _uiState.value = AuthUiState.Error(e.message ?: "Authentication failed")
@@ -52,6 +55,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = AuthUiState.Loading
             try {
                 val user = registerUseCase(name, email, password)
+                setOnboardingCompletedUseCase()
                 _uiState.value = AuthUiState.Success(user.name)
             } catch (e: Exception) {
                 _uiState.value = AuthUiState.Error(e.message ?: "Registration failed")
