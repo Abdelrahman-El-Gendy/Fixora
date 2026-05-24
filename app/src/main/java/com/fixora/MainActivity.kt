@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +20,7 @@ import androidx.navigation.toRoute
 import com.fixora.core.designsystem.theme.FixoraTheme
 import com.fixora.feature.auth.AuthViewModel
 import com.fixora.feature.auth.LoginScreen
+import com.fixora.feature.auth.OnboardingScreen
 import com.fixora.feature.auth.RegisterScreen
 import com.fixora.feature.booking.BookingScreen
 import com.fixora.feature.booking.BookingViewModel
@@ -54,12 +57,30 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+object FixoraRoutes {
+    const val SPLASH = "splash"
+    const val ONBOARDING = "onboarding"
+    const val LOGIN = "login"
+    const val REGISTER = "register"
+    const val HOME = "home"
+    const val PROVIDER_DETAIL = "provider/{providerId}"
+    const val BOOKING = "booking/{providerId}"
+    const val PROFILE = "profile"
+
+    fun providerDetail(providerId: String) = "provider/$providerId"
+    fun booking(providerId: String) = "booking/$providerId"
+}
+
 @Composable
 fun FixoraNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    startDestination: String = FixoraRoutes.SPLASH,
+    viewModel: MainViewModel = hiltViewModel()
     startDestination: Any = SplashRoute
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -68,6 +89,27 @@ fun FixoraNavHost(
         composable<SplashRoute> {
             SplashScreen(
                 onSplashFinished = {
+                    val state = uiState
+                    if (state is MainUiState.Success) {
+                        val destination = when {
+                            state.shouldShowOnboarding -> FixoraRoutes.ONBOARDING
+                            state.isAuthenticated -> FixoraRoutes.HOME
+                            else -> FixoraRoutes.LOGIN
+                        }
+                        navController.navigate(destination) {
+                            popUpTo(FixoraRoutes.SPLASH) { inclusive = true }
+                        }
+                    }
+                }
+            )
+        }
+
+        // Onboarding Screen
+        composable(FixoraRoutes.ONBOARDING) {
+            OnboardingScreen(
+                onOnboardingFinished = {
+                    navController.navigate(FixoraRoutes.LOGIN) {
+                        popUpTo(FixoraRoutes.ONBOARDING) { inclusive = true }
                     navController.navigate(LoginRoute) {
                         popUpTo<SplashRoute> { inclusive = true }
                     }

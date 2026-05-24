@@ -62,15 +62,6 @@
             </PendingDiffInfo>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/core/data/build.gradle.kts">
-          <value>
-            <PendingDiffInfo>
-              <option name="filePath" value="$PROJECT_DIR$/core/data/build.gradle.kts" />
-              <option name="originalContent" value="plugins {&#10;    alias(libs.plugins.android.library)&#10;    alias(libs.plugins.ksp)&#10;    alias(libs.plugins.hilt)&#10;}&#10;&#10;android {&#10;    namespace = &quot;com.fixora.core.data&quot;&#10;    compileSdk = 35&#10;&#10;    defaultConfig {&#10;        minSdk = 26&#10;        testInstrumentationRunner = &quot;androidx.test.runner.AndroidJUnitRunner&quot;&#10;    }&#10;&#10;    compileOptions {&#10;        sourceCompatibility = JavaVersion.VERSION_17&#10;        targetCompatibility = JavaVersion.VERSION_17&#10;    }&#10;}&#10;&#10;dependencies {&#10;    implementation(project(&quot;:core:common&quot;))&#10;    implementation(project(&quot;:core:model&quot;))&#10;    implementation(project(&quot;:core:domain&quot;))&#10;    implementation(project(&quot;:core:network&quot;))&#10;    implementation(project(&quot;:core:database&quot;))&#10;&#10;    // Hilt&#10;    implementation(libs.hilt.android)&#10;    ksp(libs.hilt.compiler)&#10;&#10;    // Coroutines&#10;    implementation(libs.kotlinx.coroutines.android)&#10;&#10;    // Testing&#10;    testImplementation(libs.junit)&#10;    androidTestImplementation(libs.androidx.test.ext)&#10;    androidTestImplementation(libs.androidx.test.espresso.core)&#10;}&#10;" />
-              <option name="updatedContent" value="plugins {&#10;    alias(libs.plugins.android.library)&#10;    alias(libs.plugins.ksp)&#10;    alias(libs.plugins.hilt)&#10;}&#10;&#10;android {&#10;    namespace = &quot;com.fixora.core.data&quot;&#10;    compileSdk = 35&#10;&#10;    defaultConfig {&#10;        minSdk = 26&#10;        testInstrumentationRunner = &quot;androidx.test.runner.AndroidJUnitRunner&quot;&#10;    }&#10;&#10;    compileOptions {&#10;        sourceCompatibility = JavaVersion.VERSION_17&#10;        targetCompatibility = JavaVersion.VERSION_17&#10;    }&#10;}&#10;&#10;dependencies {&#10;    implementation(project(&quot;:core:common&quot;))&#10;    implementation(project(&quot;:core:model&quot;))&#10;    implementation(project(&quot;:core:domain&quot;))&#10;    implementation(project(&quot;:core:network&quot;))&#10;    implementation(project(&quot;:core:database&quot;))&#10;&#10;    // Hilt&#10;    implementation(libs.hilt.android)&#10;    ksp(libs.hilt.compiler)&#10;&#10;    // DI&#10;    implementation(libs.javax.inject)&#10;&#10;    // Coroutines&#10;    implementation(libs.kotlinx.coroutines.android)&#10;&#10;    // Testing&#10;    testImplementation(libs.junit)&#10;    androidTestImplementation(libs.androidx.test.ext)&#10;    androidTestImplementation(libs.androidx.test.espresso.core)&#10;}&#10;" />
-            </PendingDiffInfo>
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/feature/auth/build.gradle.kts">
           <value>
             <PendingDiffInfo>
