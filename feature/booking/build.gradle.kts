@@ -42,9 +42,6 @@ dependencies {
     // Image Loading (Coil)
     implementation(libs.coil.kt.compose)
 
-    // Navigation Compose
-    implementation(libs.androidx.navigation.compose)
-
     // Lifecycle & Hilt ViewModel
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.lifecycle.viewModelCompose)

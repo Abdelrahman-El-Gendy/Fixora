@@ -1,26 +1,23 @@
 package com.fixora.feature.provider
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fixora.core.common.result.Result
 import com.fixora.core.domain.usecase.GetProviderUseCase
 import com.fixora.core.model.ServiceProvider
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class ProviderViewModel @Inject constructor(
-    private val getProviderUseCase: GetProviderUseCase,
-    savedStateHandle: SavedStateHandle
+@HiltViewModel(assistedFactory = ProviderViewModel.Factory::class)
+class ProviderViewModel @AssistedInject constructor(
+    @Assisted val providerId: String,
+    private val getProviderUseCase: GetProviderUseCase
 ) : ViewModel() {
-
-    val providerId: String = checkNotNull(savedStateHandle["providerId"]) {
-        "providerId is required in savedStateHandle"
-    }
 
     val providerState: StateFlow<Result<ServiceProvider?>> = getProviderUseCase(providerId)
         .stateIn(
@@ -28,4 +25,9 @@ class ProviderViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = Result.Loading
         )
+
+    @AssistedFactory
+    interface Factory {
+        fun create(providerId: String): ProviderViewModel
+    }
 }

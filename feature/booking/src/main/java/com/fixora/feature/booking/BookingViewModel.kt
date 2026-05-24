@@ -1,6 +1,5 @@
 package com.fixora.feature.booking
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fixora.core.common.result.Result
@@ -10,6 +9,9 @@ import com.fixora.core.model.Booking
 import com.fixora.core.model.ServiceProvider
 import com.fixora.core.domain.usecase.GetAuthenticatedUserUseCase
 import com.fixora.core.model.User
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +19,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 sealed interface BookingUiState {
     object Idle : BookingUiState
@@ -26,17 +27,13 @@ sealed interface BookingUiState {
     data class Error(val message: String) : BookingUiState
 }
 
-@HiltViewModel
-class BookingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = BookingViewModel.Factory::class)
+class BookingViewModel @AssistedInject constructor(
+    @Assisted val providerId: String,
     private val getProviderUseCase: GetProviderUseCase,
     private val createBookingUseCase: CreateBookingUseCase,
-    private val getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase,
-    savedStateHandle: SavedStateHandle
+    private val getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase
 ) : ViewModel() {
-
-    val providerId: String = checkNotNull(savedStateHandle["providerId"]) {
-        "providerId is required in savedStateHandle"
-    }
 
     val providerState: StateFlow<Result<ServiceProvider?>> = getProviderUseCase(providerId)
         .stateIn(
@@ -104,5 +101,10 @@ class BookingViewModel @Inject constructor(
 
     fun resetState() {
         _bookingState.value = BookingUiState.Idle
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(providerId: String): BookingViewModel
     }
 }
