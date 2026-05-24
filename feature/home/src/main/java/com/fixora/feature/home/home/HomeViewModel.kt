@@ -1,4 +1,4 @@
-package com.fixora.feature.home
+package com.fixora.feature.home.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

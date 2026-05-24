@@ -1,4 +1,4 @@
-package com.fixora.feature.booking
+package com.fixora.feature.booking.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

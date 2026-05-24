@@ -1,4 +1,4 @@
-package com.fixora.feature.auth
+package com.fixora.feature.auth.onboarding
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

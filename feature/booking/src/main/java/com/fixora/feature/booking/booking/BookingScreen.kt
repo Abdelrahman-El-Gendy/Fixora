@@ -1,4 +1,4 @@
-package com.fixora.feature.booking
+package com.fixora.feature.booking.booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -408,7 +408,7 @@ fun BookingContent(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), modifier = Modifier.padding(vertical = 4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
