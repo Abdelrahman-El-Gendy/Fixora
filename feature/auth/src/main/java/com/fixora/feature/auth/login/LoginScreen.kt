@@ -1,4 +1,4 @@
-package com.fixora.feature.auth
+package com.fixora.feature.auth.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +45,8 @@ import com.fixora.core.designsystem.components.FixoraTextField
 import com.fixora.core.designsystem.components.GlassCard
 import com.fixora.core.designsystem.theme.AccentTeal
 import com.fixora.core.designsystem.theme.PrimaryPurple
+import com.fixora.feature.auth.AuthUiState
+import com.fixora.feature.auth.AuthViewModel
 
 @Composable
 fun LoginScreen(

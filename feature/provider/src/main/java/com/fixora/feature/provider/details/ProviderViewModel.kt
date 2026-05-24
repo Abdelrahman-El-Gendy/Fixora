@@ -1,4 +1,4 @@
-package com.fixora.feature.provider
+package com.fixora.feature.provider.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

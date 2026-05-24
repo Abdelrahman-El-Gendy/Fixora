@@ -18,7 +18,15 @@ data object HomeRoute
 data class ProviderDetailRoute(val providerId: String)
 
 @Serializable
+data object ProviderListRoute
+
+@Serializable
+data object ProviderDashboardRoute
+
+@Serializable
 data class BookingRoute(val providerId: String)
 
 @Serializable
 data object ProfileRoute
+@Serializable
+data object OnboardingRoute

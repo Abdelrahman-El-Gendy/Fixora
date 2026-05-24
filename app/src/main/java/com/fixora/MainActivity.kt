@@ -19,22 +19,29 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.fixora.core.designsystem.theme.FixoraTheme
 import com.fixora.feature.auth.AuthViewModel
-import com.fixora.feature.auth.LoginScreen
-import com.fixora.feature.auth.OnboardingScreen
-import com.fixora.feature.auth.RegisterScreen
-import com.fixora.feature.booking.BookingScreen
-import com.fixora.feature.booking.BookingViewModel
-import com.fixora.feature.home.HomeScreen
-import com.fixora.feature.home.HomeViewModel
-import com.fixora.feature.profile.ProfileScreen
-import com.fixora.feature.profile.ProfileViewModel
-import com.fixora.feature.provider.ProviderDetailScreen
-import com.fixora.feature.provider.ProviderViewModel
+import com.fixora.feature.auth.login.LoginScreen
+import com.fixora.feature.auth.onboarding.OnboardingScreen
+import com.fixora.feature.auth.register.RegisterScreen
+import com.fixora.feature.booking.booking.BookingScreen
+import com.fixora.feature.booking.booking.BookingViewModel
+import com.fixora.feature.home.home.HomeScreen
+import com.fixora.feature.home.home.HomeViewModel
+import com.fixora.feature.profile.profile.ProfileScreen
+import com.fixora.feature.profile.profile.ProfileViewModel
+import com.fixora.feature.provider.dashboard.ProviderDashboardScreen
+import com.fixora.feature.provider.dashboard.ProviderDashboardViewModel
+import com.fixora.feature.provider.details.ProviderDetailScreen
+import com.fixora.feature.provider.details.ProviderViewModel
+import com.fixora.feature.provider.list.ProviderListScreen
+import com.fixora.feature.provider.list.ProviderListViewModel
 import com.fixora.navigation.BookingRoute
 import com.fixora.navigation.HomeRoute
 import com.fixora.navigation.LoginRoute
+import com.fixora.navigation.OnboardingRoute
 import com.fixora.navigation.ProfileRoute
+import com.fixora.navigation.ProviderDashboardRoute
 import com.fixora.navigation.ProviderDetailRoute
+import com.fixora.navigation.ProviderListRoute
 import com.fixora.navigation.RegisterRoute
 import com.fixora.navigation.SplashRoute
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,26 +64,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-object FixoraRoutes {
-    const val SPLASH = "splash"
-    const val ONBOARDING = "onboarding"
-    const val LOGIN = "login"
-    const val REGISTER = "register"
-    const val HOME = "home"
-    const val PROVIDER_DETAIL = "provider/{providerId}"
-    const val BOOKING = "booking/{providerId}"
-    const val PROFILE = "profile"
-
-    fun providerDetail(providerId: String) = "provider/$providerId"
-    fun booking(providerId: String) = "booking/$providerId"
-}
 
 @Composable
 fun FixoraNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = FixoraRoutes.SPLASH,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
     startDestination: Any = SplashRoute
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -91,34 +84,32 @@ fun FixoraNavHost(
                 onSplashFinished = {
                     val state = uiState
                     if (state is MainUiState.Success) {
-                        val destination = when {
-                            state.shouldShowOnboarding -> FixoraRoutes.ONBOARDING
-                            state.isAuthenticated -> FixoraRoutes.HOME
-                            else -> FixoraRoutes.LOGIN
+                        val destination: Any = when {
+                            state.shouldShowOnboarding -> OnboardingRoute
+                            state.isAuthenticated -> HomeRoute
+                            else -> LoginRoute
                         }
-                        navController.navigate(destination) {
-                            popUpTo(FixoraRoutes.SPLASH) { inclusive = true }
+                        navController.navigate(destination) { popUpTo<SplashRoute> { inclusive = true }
                         }
                     }
                 }
             )
         }
 
-        // Onboarding Screen
-        composable(FixoraRoutes.ONBOARDING) {
+        composable<OnboardingRoute> {
             OnboardingScreen(
                 onOnboardingFinished = {
-                    navController.navigate(FixoraRoutes.LOGIN) {
-                        popUpTo(FixoraRoutes.ONBOARDING) { inclusive = true }
                     navController.navigate(LoginRoute) {
-                        popUpTo<SplashRoute> { inclusive = true }
+                        popUpTo<OnboardingRoute> {
+                            inclusive = true
+                        }
                     }
                 }
             )
         }
 
         composable<LoginRoute> {
-            val viewModel: AuthViewModel = hiltViewModel()
+            val authViewModel: AuthViewModel = hiltViewModel()
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(HomeRoute) {
@@ -128,27 +119,27 @@ fun FixoraNavHost(
                 onNavigateToRegister = {
                     navController.navigate(RegisterRoute)
                 },
-                viewModel = viewModel
+                viewModel = authViewModel
             )
         }
 
         composable<RegisterRoute> {
-            val viewModel: AuthViewModel = hiltViewModel()
+            val authViewModel: AuthViewModel = hiltViewModel()
             RegisterScreen(
                 onRegisterSuccess = {
                     navController.navigate(HomeRoute) {
-                        popUpTo<LoginRoute> { inclusive = true }
+                        popUpTo<RegisterRoute> { inclusive = true }
                     }
                 },
                 onNavigateToLogin = {
-                    navController.popBackStack()
+                    navController.navigate(LoginRoute)
                 },
-                viewModel = viewModel
+                viewModel = authViewModel
             )
         }
 
         composable<HomeRoute> {
-            val viewModel: HomeViewModel = hiltViewModel()
+            val homeViewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 onNavigateToProvider = { providerId ->
                     navController.navigate(ProviderDetailRoute(providerId))
@@ -156,50 +147,85 @@ fun FixoraNavHost(
                 onNavigateToProfile = {
                     navController.navigate(ProfileRoute)
                 },
-                viewModel = viewModel
+                viewModel = homeViewModel
+            )
+        }
+
+        composable<ProviderListRoute> {
+            val providerListViewModel: ProviderListViewModel = hiltViewModel()
+            ProviderListScreen(
+                onBackClick = { navController.popBackStack() },
+                onProviderClick = { providerId ->
+                    navController.navigate(ProviderDetailRoute(providerId))
+                },
+                onBookClick = { providerId ->
+                    navController.navigate(BookingRoute(providerId))
+                },
+                viewModel = providerListViewModel
+            )
+        }
+
+        composable<ProviderDashboardRoute> {
+            val providerDashboardViewModel: ProviderDashboardViewModel = hiltViewModel()
+            ProviderDashboardScreen(
+                onSwitchToClient = {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(ProviderDashboardRoute) { inclusive = true }
+                    }
+                },
+                onViewHistory = { /* TODO */ },
+                viewModel = providerDashboardViewModel
             )
         }
 
         composable<ProviderDetailRoute> { backStackEntry ->
             val route: ProviderDetailRoute = backStackEntry.toRoute()
-            val vm = hiltViewModel<ProviderViewModel, ProviderViewModel.Factory>(
-                creationCallback = { it.create(route.providerId) }
+            val providerViewModel: ProviderViewModel = hiltViewModel(
+                creationCallback = { factory: ProviderViewModel.Factory ->
+                    factory.create(route.providerId)
+                }
             )
             ProviderDetailScreen(
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
+                    navController.popBackStack()
+                },
                 onNavigateToBooking = { providerId ->
                     navController.navigate(BookingRoute(providerId))
                 },
-                viewModel = vm
+                viewModel = providerViewModel
             )
         }
 
         composable<BookingRoute> { backStackEntry ->
             val route: BookingRoute = backStackEntry.toRoute()
-            val vm = hiltViewModel<BookingViewModel, BookingViewModel.Factory>(
-                creationCallback = { it.create(route.providerId) }
+            val bookingViewModel: BookingViewModel = hiltViewModel(
+                creationCallback = { factory: BookingViewModel.Factory ->
+                    factory.create(route.providerId)
+                }
             )
             BookingScreen(
-                onBackClick = { navController.popBackStack() },
-                onBookingSuccess = {
-                    navController.navigate(HomeRoute) {
-                        popUpTo<HomeRoute> { inclusive = true }
-                    }
+                onBackClick = {
+                    navController.popBackStack()
                 },
-                viewModel = vm
+                onBookingSuccess = {
+                    navController.popBackStack(HomeRoute, inclusive = false)
+                },
+                viewModel = bookingViewModel
             )
         }
 
         composable<ProfileRoute> {
-            val viewModel: ProfileViewModel = hiltViewModel()
+            val profileViewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
+                    navController.popBackStack()
+                },
                 onNavigateToLogin = {
                     navController.navigate(LoginRoute) {
-                        popUpTo(0) { inclusive = true }
+                        popUpTo(HomeRoute) { inclusive = true }
                     }
                 },
-                viewModel = viewModel
+                viewModel = profileViewModel
             )
         }
     }
